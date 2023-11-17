@@ -70,13 +70,14 @@ export default function TeacherLogin() {
             autoComplete='current-password'
           />
 
-          <div id='google-button-container'>
-              <GoogleAuthLogin />
-            </div>
-
           <p id='forgot-password' onClick={() => navigate('/forgot-password')}>
             Forgot Password?
           </p>
+
+          <div id='google-button-container'>
+              <GoogleAuthLogin />
+          </div>
+
           <input
             type='button'
             value={loading ? 'Loading...' : 'Login'}
