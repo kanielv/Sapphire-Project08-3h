@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
+import GoogleAuthLogin from '../GoogleAuthLogin/GoogleAuthLogin';
 import './TeacherLogin.less';
 
 const useFormInput = (initialValue) => {
@@ -68,6 +69,11 @@ export default function TeacherLogin() {
             placeholder='Password'
             autoComplete='current-password'
           />
+
+          <div id='google-button-container'>
+              <GoogleAuthLogin />
+            </div>
+
           <p id='forgot-password' onClick={() => navigate('/forgot-password')}>
             Forgot Password?
           </p>

@@ -1,18 +1,27 @@
 import React from 'react';
-
+import './GoogleAuthLogin.less';
 import { GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const CLIENT_ID=import.meta.env.VITE_CLIENT_ID;
 
 const GoogleAuthLogin = () => {
 
   return (
-    <div style={{ background: 'white', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID} >
-        <GoogleLogin onSuccess={credentialRes => { console.log(credentialRes) }} onError={() => console.log("Login Failed")} />
+    <button className='google-sign-in'>
+      <GoogleOAuthProvider clientId={CLIENT_ID}>
+        <GoogleLogin
+        ux_mode='popup' // not working
+        shape='pill'
+        theme='filled_blue'
+        size='large'
+        onSuccess={credentialRes => { console.log(credentialRes) }}
+        onError={() => console.log("Login Failed")} 
+        />
       </GoogleOAuthProvider>
-    </div >
-
+    </button>
   );
+
 };
 
 export default GoogleAuthLogin;
