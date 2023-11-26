@@ -24,6 +24,7 @@
     "react-papaparse": "^3.17.1",
     "react-router-dom": "^6.9.0",
     "recharts": "^2.5.0",
+    "strapi-google-auth": "^0.2.1",
     "vite": "^4.5.0",
     "yarn": "^1.22.10"
   },
