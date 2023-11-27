@@ -24,25 +24,38 @@ module.exports = {
   },
 
   initGoogleLogin: async (ctx) => {
-      const url = await strapi
-        .plugins['google-auth-provider']
-        .services.google
-        .createAuthUrl();
-      console.log(url)
-      ctx.body = url;
+    const url = await strapi
+      .plugins['google-auth-provider']
+      .services.google
+      .createAuthUrl();
+    console.log(url)
+    ctx.body = url;
   },
 
   initGoogleLoginCallback: async (ctx) => {
     const code = ctx.request.query.code
-    const scope = ctx.request.query.scope
 
     // Create new user and store code in db
-    await strapi
+    const user = await strapi
       .plugins['google-auth-provider']
       .services.google
-      .getUserProfile(code)
+      .getUserProfile(code);
+    
+    console.log(user)
+    console.log(`Authorization Header: ${ctx.request.header}`)
 
-    ctx.redirect("http://localhost:3000");
+    ctx.redirect("http://localhost:3000/dashboard");
+  },
+
+  getUserDetails: async (ctx) => {
+    const token = ctx.request.header.authorization ? ctx.request.header.authorization.replace("Bearer ", "") : null;
+    console.log(token);
+    const userData = await strapi
+      .plugins['google-auth-provider']
+      .services.google
+      .getUserDetailsFromToken(token)
+
+    console.log(userData);
   }
 
 };

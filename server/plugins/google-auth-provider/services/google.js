@@ -55,8 +55,6 @@ module.exports = {
 
         const payload = ticket.getPayload();
         const { name, email } = payload;
-        console.log(email);
-
         // If user does not exist, create new one
         const user = await strapi.query('user', 'users-permissions').findOne({ email: email.toLowerCase() });
         if (!user) {
@@ -70,16 +68,22 @@ module.exports = {
                 blocked: false,
                 role: 1,
                 provider: "local"
-            })
-            console.log(newUser)
+            });
+
+            return {
+                // token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(newUser, ['id'])),
+                token: id_token,
+                user: strapi.admin.services.user.sanitizeUser(newUser)
+            }
+
 
         }
 
-        // if (!user) {
-        //     let randomPassword = this.generatePassword();
-        //     let password = await strapi.plugin['user-permissions'].services.user.hashPassword(randomPassword);
-        //     console.log(password)
-        // }
+        return {
+            // token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id'])),
+            token: id_token,
+            user: strapi.admin.services.user.sanitizeUser(user)
+        }
 
     },
 
@@ -95,6 +99,14 @@ module.exports = {
         }
 
         return result;
+    },
+
+    async getUserDetailsFromToken(token) {
+        const payload = await strapi.plugins['users-permissions'].services.jwt.verify(token);
+        const userID = payload.id;
+
+        let user = await strapi.plugins['users-permissions'].services.user.fetchAuthenticatedUser(userID);
+        console.log(user);
     }
 
 
