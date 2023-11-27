@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+const CLIENT_ID=import.meta.env.VITE_CLIENT_ID;
+
 const GoogleAuthLogin = () => {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ const GoogleAuthLogin = () => {
     </div >
 
   );
+
 };
 
 export default GoogleAuthLogin;
