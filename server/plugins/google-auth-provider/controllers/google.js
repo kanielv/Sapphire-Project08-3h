@@ -16,10 +16,19 @@ module.exports = {
 
   index: async (ctx) => {
     // Add your own logic here.
-
+    console.log("Plugin")
     // Send 200 `ok`
     ctx.send({
       message: 'ok'
     });
+  },
+
+  credentials: async (ctx) => {
+      const url = await strapi
+        .plugins['google-auth-provider']
+        .services.google
+        .createAuthUrl()
+      console.log(url)
+      ctx.send(url);
   }
 };

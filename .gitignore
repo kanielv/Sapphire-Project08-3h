@@ -20,7 +20,7 @@ yarn-error.log*
 .strapi-updater.json
 
 # Google API
-.credentials.json
+keys.json
 
 # Packages
 *.zip

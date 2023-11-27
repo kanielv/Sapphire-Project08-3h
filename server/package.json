@@ -15,6 +15,7 @@
     "@strapi/provider-email-gmail-api": "npm:@bztes/strapi-provider-email-gmail-api@^4.0.3",
     "bull": "^4.10.0",
     "dotenv": "^10.0.0",
+    "google-auth-library": "^9.2.0",
     "googleapis": "^95.0.0",
     "knex": "0.21.18",
     "pg": "^8.10.0",

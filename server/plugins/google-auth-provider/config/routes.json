@@ -3,10 +3,19 @@
     {
       "method": "GET",
       "path": "/",
-      "handler": "google-auth-provider.index",
+      "handler": "google.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/credentials",
+      "handler": "google.credentials",
       "config": {
         "policies": []
       }
     }
+
   ]
 }
