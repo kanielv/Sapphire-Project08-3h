@@ -10,8 +10,8 @@
     },
     {
       "method": "GET",
-      "path": "/credentials",
-      "handler": "google.credentials",
+      "path": "/initGoogleLogin",
+      "handler": "google.initGoogleLogin",
       "config": {
         "policies": []
       }

@@ -23,12 +23,12 @@ module.exports = {
     });
   },
 
-  credentials: async (ctx) => {
+  initGoogleLogin: async (ctx) => {
       const url = await strapi
         .plugins['google-auth-provider']
         .services.google
-        .createAuthUrl()
+        .createAuthUrl();
       console.log(url)
-      ctx.send(url);
+      ctx.body = url;
   }
 };
