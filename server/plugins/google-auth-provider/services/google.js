@@ -13,7 +13,7 @@ module.exports = {
             process.env.CLIENT_SECRET,
             process.env.REDIRECT_URL
         );
-        
+
         return oAuth2Client;
     },
     getAuthenticatedClientUrl(auth, scopes) {
@@ -26,7 +26,7 @@ module.exports = {
     },
 
     createAuthUrl() {
-        const scopes = ['https://www.googleapis.com/auth/classroom.rosters', 'https://www.googleapis.com/auth/userinfo.profile']
+        const scopes = ['https://www.googleapis.com/auth/classroom.rosters', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']
 
         const auth = this.createAuthenticatedClient();
         const authUrl = this.getAuthenticatedClientUrl(auth, scopes);
@@ -55,9 +55,47 @@ module.exports = {
 
         const payload = ticket.getPayload();
         const { name, email } = payload;
-        console.log(name);
+        console.log(email);
 
+        // If user does not exist, create new one
+        const user = await strapi.query('user', 'users-permissions').findOne({ email: email.toLowerCase() });
+        if (!user) {
+            let randomPassword = this.generatePassword();
+            let password = await strapi.admin.services.auth.hashPassword(randomPassword);
+            let newUser = await strapi.query('user', 'users-permissions').create({
+                username: name,
+                email,
+                password,
+                confirmed: true,
+                blocked: false,
+                role: 1,
+                provider: "local"
+            })
+            console.log(newUser)
+
+        }
+
+        // if (!user) {
+        //     let randomPassword = this.generatePassword();
+        //     let password = await strapi.plugin['user-permissions'].services.user.hashPassword(randomPassword);
+        //     console.log(password)
+        // }
+
+    },
+
+    generatePassword() {
+        let LENGTH = 10;
+
+        let result = '';
+        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+        for (let i = 0; i < LENGTH; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+
+        return result;
     }
 
-    
+
 };
