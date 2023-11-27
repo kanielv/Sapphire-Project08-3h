@@ -6,10 +6,13 @@ import { getGoogleLoginUrl, GoogleUserGetProfile} from '../../Utils/GoogleAuthRe
 import { setUserSession } from '../../Utils/AuthRequests'
 import { useSearchParams } from 'react-router-dom';
 import { getCurrUser } from '../../Utils/userState';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const GoogleAuthLogin = () => {
   const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUser = async (code) => {
@@ -21,6 +24,7 @@ const GoogleAuthLogin = () => {
         let user = data.data.user;
         let token = data.data.token
         setUserSession(token, JSON.stringify(user));
+        navigate('/dashboard');        
       })
     }
   }, [])

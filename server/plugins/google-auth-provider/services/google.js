@@ -71,8 +71,8 @@ module.exports = {
             });
 
             return {
-                // token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(newUser, ['id'])),
-                token: id_token,
+                token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(newUser, ['id'])),
+                gapi_token: id_token,
                 user: strapi.admin.services.user.sanitizeUser(newUser)
             }
 
@@ -80,8 +80,8 @@ module.exports = {
         }
 
         return {
-            // token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id'])),
-            token: id_token,
+            token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id'])),
+            gapi_token: id_token,
             user: strapi.admin.services.user.sanitizeUser(user)
         }
 
