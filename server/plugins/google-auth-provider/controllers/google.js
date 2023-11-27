@@ -30,5 +30,14 @@ module.exports = {
         .createAuthUrl();
       console.log(url)
       ctx.body = url;
+  },
+
+  initGoogleLoginCallback: async (ctx) => {
+    const code = ctx.request.query.code
+    const scope = ctx.request.query.scope
+    console.log(code);
+    ctx.body = {message: 'ok'}
+
   }
+
 };

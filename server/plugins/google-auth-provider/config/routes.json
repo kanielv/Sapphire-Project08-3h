@@ -15,7 +15,16 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/initGoogleLogin/callback",
+      "handler": "google.initGoogleLoginCallback",
+      "config": {
+        "policies": []
+      }
     }
+    
 
   ]
 }
