@@ -1,7 +1,7 @@
 'use strict';
 const dotenv = require('dotenv').config();
 const { google } = require('googleapis');
-// const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const { sanitizeEntity } = require('strapi-utils');
 const _ = require('lodash');
 
@@ -34,8 +34,29 @@ module.exports = {
         const authUrlObj = {
             url: authUrl
         }
-        
+
         return authUrlObj
+    },
+
+    async getUserProfile(code) {
+        // Check Credentials
+
+        // Create Client and get tokens
+        const oAuthClient = this.createAuthenticatedClient();
+        const tokens = await oAuthClient.getToken(code);
+
+        const { id_token } = tokens.tokens;
+
+        const client = new OAuth2Client(process.env.CLIENT_ID);
+        const ticket = await client.verifyIdToken({
+            idToken: id_token,
+            audience: process.env.CLIENT_ID
+        });
+
+        const payload = ticket.getPayload();
+        const { name, email } = payload;
+        console.log(name);
+
     }
 
     

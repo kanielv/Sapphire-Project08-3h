@@ -35,9 +35,14 @@ module.exports = {
   initGoogleLoginCallback: async (ctx) => {
     const code = ctx.request.query.code
     const scope = ctx.request.query.scope
-    console.log(code);
-    ctx.body = {message: 'ok'}
 
+    // Create new user and store code in db
+    await strapi
+      .plugins['google-auth-provider']
+      .services.google
+      .getUserProfile(code)
+
+    ctx.redirect("http://localhost:3000");
   }
 
 };
