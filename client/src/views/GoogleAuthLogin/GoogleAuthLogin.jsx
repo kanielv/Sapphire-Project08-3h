@@ -2,16 +2,33 @@ import React, { useEffect, useState } from 'react';
 
 import { GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { getGoogleLoginUrl } from '../../Utils/GoogleAuthRequests';
-import { useLinkClickHandler } from 'react-router-dom';
+import { getGoogleLoginUrl, GoogleUserGetProfile} from '../../Utils/GoogleAuthRequests';
+import { setUserSession } from '../../Utils/AuthRequests'
+import { useSearchParams } from 'react-router-dom';
+import { getCurrUser } from '../../Utils/userState';
 
 
 const GoogleAuthLogin = () => {
+  const [queryParams] = useSearchParams();
+
+  useEffect(() => {
+    const getUser = async (code) => {
+      return await GoogleUserGetProfile(code);
+    }
+
+    if(queryParams.get('code') !== null) {
+      let userInfo = getUser(queryParams.get('code')).then(data => {
+        let user = data.data.user;
+        let token = data.data.token
+        setUserSession(token, JSON.stringify(user));
+      })
+    }
+  }, [])
 
   const handleLoginCallback = async () => {
     const url = await getGoogleLoginUrl()
+    console.log(url.data.url)
     console.log(window.location.replace(url.data.url))
-    // window.location.replace(url)
   }
 
   return (

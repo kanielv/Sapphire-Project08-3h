@@ -41,10 +41,9 @@ module.exports = {
       .services.google
       .getUserProfile(code);
     
-    console.log(user)
-    console.log(`Authorization Header: ${ctx.request.header}`)
-
-    ctx.redirect("http://localhost:3000/dashboard");
+    ctx.body = user;
+    ctx.send(user);
+    // ctx.redirect(`http://localhost:3000/google-auth-login`);
   },
 
   getUserDetails: async (ctx) => {

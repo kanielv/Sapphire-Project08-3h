@@ -8,6 +8,7 @@ export const getGoogleLoginUrl = async () => {
     return url;
 }
 
-export const GoogleUserGetProfile = (token) => {
-
+export const GoogleUserGetProfile = async (code) => {
+    const user = await axios.get(`${server}/google-auth-provider/initGoogleLogin/callback?code=${code}`);
+    return user;
 }
