@@ -5,7 +5,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
 import GoogleAuthLogin from '../GoogleAuthLogin/GoogleAuthLogin';
 import './TeacherLogin.less';
-
+ 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
 

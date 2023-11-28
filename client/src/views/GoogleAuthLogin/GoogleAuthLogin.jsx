@@ -9,9 +9,6 @@ import { getCurrUser } from '../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
 
 
-
-const CLIENT_ID=import.meta.env.VITE_CLIENT_ID;
-
 const GoogleAuthLogin = () => {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
@@ -30,18 +27,20 @@ const GoogleAuthLogin = () => {
       })
     }
   }, [])
+  
+  const redirectURL = async () => {
+    const url = await getGoogleLoginUrl().then(res =>{
+      window.location.replace(res.data.url);
+    });
+  }
 
-  const handleLoginCallback = async () => {
-    const url = await getGoogleLoginUrl()
-    console.log(url.data.url)
-    console.log(window.location.replace(url.data.url))
+  const handleLoginCallback = async (e) => {
+    e.preventDefault();
+    redirectURL();
   }
 
   return (
-    <div style={{ background: 'white', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
       <button onClick={handleLoginCallback}> Sign In With Google </button>
-    </div >
-
   );
 
 };
