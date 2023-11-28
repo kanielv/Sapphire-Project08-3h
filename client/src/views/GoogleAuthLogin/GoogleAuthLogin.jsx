@@ -8,6 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getCurrUser } from '../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
 
+const CLIENT_ID=import.meta.env.VITE_CLIENT_ID;
 
 const GoogleAuthLogin = () => {
   const [queryParams] = useSearchParams();
@@ -40,8 +41,19 @@ const GoogleAuthLogin = () => {
   }
 
   return (
-      <button onClick={handleLoginCallback}> Sign In With Google </button>
-  );
+      <div className='google-sign-in'>
+        <GoogleOAuthProvider clientId={CLIENT_ID}>
+          <GoogleLogin
+            ux_mode='popup' // not working
+            shape='pill'
+            theme='filled_blue'
+            size='large'
+            onSuccess={credentialRes => { console.log(credentialRes) }}
+            onError={() => console.log("Login Failed")}
+          />
+        </GoogleOAuthProvider>
+      </div>
+  );  
 
 };
 
