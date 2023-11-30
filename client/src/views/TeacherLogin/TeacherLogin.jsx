@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
+import { setGoogleUserSession } from '../../Utils/GoogleAuthRequests';
 import { getGoogleLoginUrl, GoogleUserGetProfile } from '../../Utils/GoogleAuthRequests';
 import './TeacherLogin.less';
 import { getCurrUser } from '../../Utils/userState';
@@ -70,27 +71,14 @@ export default function TeacherLogin() {
       });
   };
 
-  // TODO MOVE TO GOOGLE AUTH
-  const redirectURL = async () => {
-    const url = await getGoogleLoginUrl().then(res => {
-      window.location.replace(res.data.url);
-    });
-  }
-  const handleGoogleLogin = async (e) => {
-    e.preventDefault()
-    setLoading(true);
-    const url = await getGoogleLoginUrl();
-    window.location.replace(url.data.url);
-  }
 
   const handleCredential = async (res) => {
     const credential = res.credential
-    console.log(res.credential)
     const url = new URL("http://localhost:1337/api/google-auth-provider/initGoogleLogin/callback")
     url.searchParams.append('code', credential)
-    console.log(url)
-    const req = await axios.get(url)
-    console.log(req)
+    const dataRes = await axios.get(url)
+    setGoogleUserSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
+    navigate('/dashboard');  
   }
 
   return (
