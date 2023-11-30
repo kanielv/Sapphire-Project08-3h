@@ -1,11 +1,16 @@
 import { message } from 'antd';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
-import GoogleAuthLogin from '../GoogleAuthLogin/GoogleAuthLogin';
+import { getGoogleLoginUrl, GoogleUserGetProfile } from '../../Utils/GoogleAuthRequests';
 import './TeacherLogin.less';
- 
+import { getCurrUser } from '../../Utils/userState';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+
+
+
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
 
@@ -22,7 +27,26 @@ export default function TeacherLogin() {
   const email = useFormInput('');
   const password = useFormInput('');
   const [loading, setLoading] = useState(false);
+  const [queryParams] = useSearchParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getUser = async (code) => {
+      return await GoogleUserGetProfile(code);
+    }
+
+    if (queryParams.get('code') !== null) {
+      let userInfo = getUser(queryParams.get('code')).then(data => {
+        let user = data.data.user;
+        let token = data.data.token;
+        console.log(data)
+        console.log(token)
+        setUserSession(token, JSON.stringify(user));
+        console.log(getCurrUser())
+        navigate('/dashboard');
+      })
+    }
+  }, [])
 
   const handleLogin = () => {
     setLoading(true);
@@ -45,6 +69,29 @@ export default function TeacherLogin() {
         message.error('Login failed. Please input a valid email and password.');
       });
   };
+
+  // TODO MOVE TO GOOGLE AUTH
+  const redirectURL = async () => {
+    const url = await getGoogleLoginUrl().then(res => {
+      window.location.replace(res.data.url);
+    });
+  }
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault()
+    setLoading(true);
+    const url = await getGoogleLoginUrl();
+    window.location.replace(url.data.url);
+  }
+
+  const handleCredential = async (res) => {
+    const credential = res.credential
+    console.log(res.credential)
+    const url = new URL("http://localhost:1337/api/google-auth-provider/initGoogleLogin/callback")
+    url.searchParams.append('code', credential)
+    console.log(url)
+    const req = await axios.get(url)
+    console.log(req)
+  }
 
   return (
     <div className='container nav-padding'>
@@ -74,9 +121,23 @@ export default function TeacherLogin() {
             Forgot Password?
           </p>
 
-          <div id='google-button-container'>
-              <GoogleAuthLogin />
+          <div className='google-sign-in'>
+            <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
+              <GoogleLogin
+                ux_mode='popup'
+                shape='pill'
+                theme='filled_blue'
+                size='large'
+                onSuccess={res => {handleCredential(res)}}
+                onError={() => console.log("Login Failed")}
+              />
+            </GoogleOAuthProvider>
           </div>
+      
+
+          {/* <div style={{ background: 'white', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+            <button onClick={handleLoginCallback}> Sign In With Google </button>
+          </div > */}
 
           <input
             type='button'
