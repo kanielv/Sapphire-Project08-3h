@@ -43,13 +43,13 @@ module.exports = {
 
         // Create Client and get tokens
         const oAuthClient = this.createAuthenticatedClient();
-        const tokens = await oAuthClient.getToken(code);
+        // const tokens = await oAuthClient.getToken(code);
 
-        const { id_token } = tokens.tokens;
+        // const { id_token } = tokens.tokens;
 
         const client = new OAuth2Client(process.env.CLIENT_ID);
         const ticket = await client.verifyIdToken({
-            idToken: id_token,
+            idToken: code,
             audience: process.env.CLIENT_ID
         });
 
@@ -72,7 +72,7 @@ module.exports = {
 
             return {
                 token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(newUser, ['id'])),
-                gapi_token: id_token,
+                gapi_token: code,
                 user: strapi.admin.services.user.sanitizeUser(newUser)
             }
 
@@ -81,7 +81,7 @@ module.exports = {
 
         return {
             token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id'])),
-            gapi_token: id_token,
+            gapi_token: code,
             user: strapi.admin.services.user.sanitizeUser(user)
         }
 
