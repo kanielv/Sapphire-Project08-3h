@@ -1,16 +1,11 @@
 import { message } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
-import { setGoogleUserSession } from '../../Utils/GoogleAuthRequests';
-import { getGoogleLoginUrl, GoogleUserGetProfile } from '../../Utils/GoogleAuthRequests';
+import { GoogleUserGetProfile, setGoogleUserSession } from '../../Utils/GoogleAuthRequests';
 import './TeacherLogin.less';
-import { getCurrUser } from '../../Utils/userState';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
-
-
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -28,26 +23,7 @@ export default function TeacherLogin() {
   const email = useFormInput('');
   const password = useFormInput('');
   const [loading, setLoading] = useState(false);
-  const [queryParams] = useSearchParams();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const getUser = async (code) => {
-      return await GoogleUserGetProfile(code);
-    }
-
-    if (queryParams.get('code') !== null) {
-      let userInfo = getUser(queryParams.get('code')).then(data => {
-        let user = data.data.user;
-        let token = data.data.token;
-        console.log(data)
-        console.log(token)
-        setUserSession(token, JSON.stringify(user));
-        console.log(getCurrUser())
-        navigate('/dashboard');
-      })
-    }
-  }, [])
 
   const handleLogin = () => {
     setLoading(true);
@@ -71,12 +47,9 @@ export default function TeacherLogin() {
       });
   };
 
-
   const handleCredential = async (res) => {
-    const credential = res.credential
-    const url = new URL("http://localhost:1337/api/google-auth-provider/initGoogleLogin/callback")
-    url.searchParams.append('code', credential)
-    const dataRes = await axios.get(url)
+    const credential = res.credential;
+    const dataRes = await GoogleUserGetProfile(credential); 
     setGoogleUserSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
     navigate('/dashboard');  
   }
@@ -121,11 +94,6 @@ export default function TeacherLogin() {
               />
             </GoogleOAuthProvider>
           </div>
-      
-
-          {/* <div style={{ background: 'white', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-            <button onClick={handleLoginCallback}> Sign In With Google </button>
-          </div > */}
 
           <input
             type='button'

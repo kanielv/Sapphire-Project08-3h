@@ -9,12 +9,14 @@ export const getGoogleLoginUrl = async () => {
 }
 
 export const GoogleUserGetProfile = async (code) => {
-    const user = await axios.get(`${server}/google-auth-provider/initGoogleLogin/callback?code=${code}`);
-    return user;
+    const url = new URL("http://localhost:1337/api/google-auth-provider/initGoogleLogin/callback");
+    url.searchParams.append('code', code);
+    const dataRes = await axios.get(url);
+    return dataRes;
 }
 
 export const getGapiToken = () => {
-    return sessionStorage.getItem('gapi_token')
+    return sessionStorage.getItem('gapiToken')
 }
 
 export const setGoogleUserSession = (jwt, gapi, user) => {

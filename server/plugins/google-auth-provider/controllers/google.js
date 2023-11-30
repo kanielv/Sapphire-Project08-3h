@@ -16,7 +16,6 @@ module.exports = {
 
   index: async (ctx) => {
     // Add your own logic here.
-    console.log("Plugin")
     // Send 200 `ok`
     ctx.send({
       message: 'ok'
@@ -48,13 +47,10 @@ module.exports = {
 
   getUserDetails: async (ctx) => {
     const token = ctx.request.header.authorization ? ctx.request.header.authorization.replace("Bearer ", "") : null;
-    console.log(token);
     const userData = await strapi
       .plugins['google-auth-provider']
       .services.google
       .getUserDetailsFromToken(token)
-
-    console.log(userData);
   }
 
 };
