@@ -12,7 +12,6 @@ const GoogleAuthLogin = () => {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const CLIENT_ID=import.meta.env.VITE_CLIENT_ID;
 
   useEffect(() => {
     const getUser = async (code) => {

@@ -7,6 +7,8 @@ import { getGoogleLoginUrl, GoogleUserGetProfile } from '../../Utils/GoogleAuthR
 import './TeacherLogin.less';
 import { getCurrUser } from '../../Utils/userState';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+
 
 
 const useFormInput = (initialValue) => {
@@ -81,6 +83,16 @@ export default function TeacherLogin() {
     window.location.replace(url.data.url);
   }
 
+  const handleCredential = async (res) => {
+    const credential = res.credential
+    console.log(res.credential)
+    const url = new URL("http://localhost:1337/api/google-auth-provider/initGoogleLogin/callback")
+    url.searchParams.append('code', credential)
+    console.log(url)
+    const req = await axios.get(url)
+    console.log(req)
+  }
+
   return (
     <div className='container nav-padding'>
       <NavBar />
@@ -112,16 +124,20 @@ export default function TeacherLogin() {
           <div className='google-sign-in'>
             <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
               <GoogleLogin
-                ux_mode='popup' // not working
+                ux_mode='popup'
                 shape='pill'
                 theme='filled_blue'
                 size='large'
-                onSuccess={credentialRes => { console.log(credentialRes) }}
+                onSuccess={res => {handleCredential(res)}}
                 onError={() => console.log("Login Failed")}
               />
             </GoogleOAuthProvider>
           </div>
+      
 
+          {/* <div style={{ background: 'white', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+            <button onClick={handleLoginCallback}> Sign In With Google </button>
+          </div > */}
 
           <input
             type='button'

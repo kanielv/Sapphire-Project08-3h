@@ -39,4 +39,3 @@ const makeGoogleRequest = async ({ method, path, data, auth = false, error }) =>
     return { data: res, err: err };
   };
 
-const googleGetCourses() 
