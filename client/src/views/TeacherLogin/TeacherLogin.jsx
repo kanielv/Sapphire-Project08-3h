@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
-import { GoogleUserGetProfile, setGoogleUserSession } from '../../Utils/GoogleAuthRequests';
+import { googleUserGetProfile, googleUserSetSession } from '../../Utils/GoogleAuthRequests';
 import './TeacherLogin.less';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
@@ -49,8 +49,8 @@ export default function TeacherLogin() {
 
   const handleCredential = async (res) => {
     const credential = res.credential;
-    const dataRes = await GoogleUserGetProfile(credential); 
-    setGoogleUserSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
+    const dataRes = await googleUserGetProfile(credential); 
+    googleUserSetSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
     navigate('/dashboard');  
   }
 
