@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "google-classroom-api.index",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
