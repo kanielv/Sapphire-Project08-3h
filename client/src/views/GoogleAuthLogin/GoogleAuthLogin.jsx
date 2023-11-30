@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { GoogleLogin } from '@react-oauth/google';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { getGoogleLoginUrl, GoogleUserGetProfile} from '../../Utils/GoogleAuthRequests';
 import { setUserSession } from '../../Utils/AuthRequests'
 import { useSearchParams } from 'react-router-dom';
@@ -13,6 +12,8 @@ const GoogleAuthLogin = () => {
   const [queryParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const CLIENT_ID=import.meta.env.VITE_CLIENT_ID;
+
   useEffect(() => {
     const getUser = async (code) => {
       return await GoogleUserGetProfile(code);
@@ -22,6 +23,7 @@ const GoogleAuthLogin = () => {
       let userInfo = getUser(queryParams.get('code')).then(data => {
         let user = data.data.user;
         let token = data.data.token
+        console.log(token)
         setUserSession(token, JSON.stringify(user));
         navigate('/dashboard');        
       })
@@ -34,13 +36,21 @@ const GoogleAuthLogin = () => {
     });
   }
 
-  const handleLoginCallback = async (e) => {
+  const handleLoginCallback = (e) => {
     e.preventDefault();
     redirectURL();
   }
 
   return (
-      <button onClick={handleLoginCallback}> Sign In With Google </button>
+      // <button onClick={handleLoginCallback}> Sign In With Google </button>
+      <GoogleLogin
+      ux_mode='popup' // not working
+      shape='pill'
+      theme='filled_blue'
+      size='large'
+      onSuccess={credentialRes => { console.log(credentialRes) }}
+      onError={() => console.log("Login Failed")}
+    />
   );
 
 };
