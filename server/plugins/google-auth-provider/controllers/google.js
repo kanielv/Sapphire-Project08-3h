@@ -33,7 +33,7 @@ module.exports = {
 
   initGoogleLoginCallback: async (ctx) => {
     const code = ctx.request.query.code
-
+    console.log(code)
     // Create new user and store code in db
     const user = await strapi
       .plugins['google-auth-provider']

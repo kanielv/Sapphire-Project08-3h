@@ -5,7 +5,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
 import { googleUserGetProfile, googleUserSetSession } from '../../Utils/GoogleAuthRequests';
 import './TeacherLogin.less';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -48,12 +48,21 @@ export default function TeacherLogin() {
   };
 
   const handleCredential = async (res) => {
-    const credential = res.credential;
-    const dataRes = await googleUserGetProfile(credential); 
+    const dataRes = await googleUserGetProfile(res);
     googleUserSetSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
-    navigate('/dashboard');  
+    navigate('/dashboard');
   }
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: codeResponse => handleCredential(codeResponse.code),
+    flow: 'auth-code',
+    redirect_uri: 'postmessage'
+  });
+
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    googleLogin();
+  }
   return (
     <div className='container nav-padding'>
       <NavBar />
@@ -82,7 +91,7 @@ export default function TeacherLogin() {
             Forgot Password?
           </p>
 
-          <div className='google-sign-in'>
+          {/* <div className='google-sign-in'>
             <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
               <GoogleLogin
                 ux_mode='popup'
@@ -93,7 +102,8 @@ export default function TeacherLogin() {
                 onError={() => console.log("Login Failed")}
               />
             </GoogleOAuthProvider>
-          </div>
+          </div> */}
+          <button onClick={(e) => handleGoogleLogin(e)}>Sign in with Google</button>
 
           <input
             type='button'

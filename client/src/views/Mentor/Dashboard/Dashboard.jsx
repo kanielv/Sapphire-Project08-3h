@@ -8,12 +8,20 @@ import NavBar from '../../../components/NavBar/NavBar';
 import { useGlobalState } from '../../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
 
+// Google Api Imports
+import { googleGetClassrooms } from '../../../Utils/googleRequests';
+import { googleGetGapiToken } from '../../../Utils/GoogleAuthRequests';
+
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [value] = useGlobalState('currUser');
   const navigate = useNavigate();
 
   useEffect(() => {
+    googleGetClassrooms(googleGetGapiToken()).then(res => {
+      console.log(res);
+    })
+
     let classroomIds = [];
     getMentor().then((res) => {
       if (res.data) {

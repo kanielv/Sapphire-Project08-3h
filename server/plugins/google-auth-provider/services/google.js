@@ -26,7 +26,7 @@ module.exports = {
     },
 
     createAuthUrl() {
-        const scopes = ['https://www.googleapis.com/auth/classroom.rosters', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email']
+        const scopes = ['https://www.googleapis.com/auth/classroom.rosters', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/classroom.courses', 'https://www.googleapis.com/auth/classroom.courses.readonly']
 
         const auth = this.createAuthenticatedClient();
         const authUrl = this.getAuthenticatedClientUrl(auth, scopes);
@@ -43,18 +43,24 @@ module.exports = {
 
         // Create Client and get tokens
         const oAuthClient = this.createAuthenticatedClient();
-        // const tokens = await oAuthClient.getToken(code);
+        const tokens = await oAuthClient.getToken(code);
 
-        // const { id_token } = tokens.tokens;
+        const { id_token, access_token } = tokens.tokens;
+
+        oAuthClient.setCredentials(tokens);
+      
 
         const client = new OAuth2Client(process.env.CLIENT_ID);
         const ticket = await client.verifyIdToken({
-            idToken: code,
+            idToken: id_token,
             audience: process.env.CLIENT_ID
         });
 
         const payload = ticket.getPayload();
-        const { name, email } = payload;
+        const { name, email} = payload;
+
+        // const { refresh_token } = tokens.refresh_token
+
         // If user does not exist, create new one
         const user = await strapi.query('user', 'users-permissions').findOne({ email: email.toLowerCase() });
         if (!user) {
@@ -72,7 +78,7 @@ module.exports = {
 
             return {
                 token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(newUser, ['id'])),
-                gapi_token: code,
+                gapi_token: access_token,
                 user: strapi.admin.services.user.sanitizeUser(newUser)
             }
 
@@ -81,7 +87,7 @@ module.exports = {
 
         return {
             token: strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id'])),
-            gapi_token: code,
+            gapi_token: access_token,
             user: strapi.admin.services.user.sanitizeUser(user)
         }
 
