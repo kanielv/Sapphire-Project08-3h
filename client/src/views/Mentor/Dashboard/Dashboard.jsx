@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     googleGetClassrooms(googleGetGapiToken()).then(res => {
-      console.log(res);
+      console.log(res.data.courses);
     })
 
     let classroomIds = [];
@@ -55,7 +55,7 @@ export default function Dashboard() {
                 <h1 id='card-title'>{classroom.name}</h1>
                 <div id='card-button-container' className='flex flex-row'>
                   <button onClick={() => handleViewClassroom(classroom.id)}>
-                    View
+                    Viewgoogle-classroom-api
                   </button>
                 </div>
               </div>

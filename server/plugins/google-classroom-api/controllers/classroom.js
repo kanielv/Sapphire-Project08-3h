@@ -25,22 +25,25 @@ module.exports = {
 
   getCourseList: async (ctx) => {
     const code = ctx.request.query.code
-    console.log(`Code: ${code}`);
+    // console.log(`Code: ${code}`);
 
-    const token = await strapi
+    const googleClassroomClient = await strapi
       .plugins['google-classroom-api']
       .services.classroom
-      .getAccessToken(code);
-
+      .getGoogleClassroomClient(code);
     
-    // const courses = await strapi
-    // .plugins['google-classroom-api']
-    // .services.classroom
-    // .getCourses(token);
+    const courses = await strapi
+    .plugins['google-classroom-api']
+    .services.classroom
+    .getCourses(googleClassroomClient);
 
-    console.log(token);
     ctx.send({
-      message: 'ok'
+      message: 'ok',
+      courses
     });
+  },
+
+  changeStudentGrade: async (ctx) => {
+
   }
 };

@@ -49,14 +49,18 @@ export default function TeacherLogin() {
 
   const handleCredential = async (res) => {
     const dataRes = await googleUserGetProfile(res);
+    console.log(dataRes.data.gapi_token)
     googleUserSetSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
     navigate('/dashboard');
   }
 
+  const scopes ='https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.courses.readonly';
+
   const googleLogin = useGoogleLogin({
     onSuccess: codeResponse => handleCredential(codeResponse.code),
     flow: 'auth-code',
-    redirect_uri: 'postmessage'
+    redirect_uri: 'postmessage',
+    scope: scopes
   });
 
   const handleGoogleLogin = (e) => {
@@ -91,18 +95,6 @@ export default function TeacherLogin() {
             Forgot Password?
           </p>
 
-          {/* <div className='google-sign-in'>
-            <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
-              <GoogleLogin
-                ux_mode='popup'
-                shape='pill'
-                theme='filled_blue'
-                size='large'
-                onSuccess={res => {handleCredential(res)}}
-                onError={() => console.log("Login Failed")}
-              />
-            </GoogleOAuthProvider>
-          </div> */}
           <button onClick={(e) => handleGoogleLogin(e)}>Sign in with Google</button>
 
           <input

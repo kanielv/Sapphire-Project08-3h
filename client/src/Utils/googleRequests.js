@@ -39,6 +39,7 @@ const makeGoogleRequest = async ({ method, path, data, auth = false, error }) =>
     return { data: res, err: err };
   };
 
+
 export const googleGetClassrooms = async (code) => {
   const url = new URL(`${server}/google-classroom-api/me`);
   url.searchParams.append('code', code);
