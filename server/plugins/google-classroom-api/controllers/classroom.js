@@ -36,8 +36,6 @@ module.exports = {
     .services.classroom
     .getCourses(googleClassroomClient);
 
-    console.log(courses)
-
     ctx.send({
       message: 'ok',
       courses: courses.data.courses
@@ -45,7 +43,8 @@ module.exports = {
   },
 
   get: async (ctx) => {
-    const id = ctx.request.query.id;
+    const code = ctx.request.query.code;
+    const id = ctx.params.id;
 
     const googleClassroomClient = await strapi
     .plugins['google-classroom-api']
@@ -55,11 +54,18 @@ module.exports = {
     const course = await googleClassroomClient.courses.get({
       id
     })
-    console.log(classroom);
+
     ctx.send({
       message: 'ok',
-      course
+      course: course.data
     })
-  }
+  },
+
+  create: async (ctx) => {
+    console.log(ctx.request.body)
+    const { name, school, grade } = ctx.request.body;
+    
+    const classroom = await strapi.services.classroom.create(ctx.request.body);
+    return sanitizeEntity(classroom, { model: strapi.models.classroom });  }
 
 };

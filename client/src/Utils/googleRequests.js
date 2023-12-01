@@ -34,10 +34,22 @@ const makeGoogleRequest = async ({ method, path, data, auth = false, error }) =>
   };
 
 export const googleGetClassrooms = async () => {
-  const url = new URL(`${server}/google-classroom-api/me`);
+  const url = new URL(`${server}/google-classroom-api/courses`);
   url.searchParams.append('code', googleGetGapiToken());
   const res = axios.get(url);
   return res;
 }
 
-export const googleGetClassroom = async
+export const googleGetClassroom = async (id) => {
+  const url = new URL(`${server}/google-classroom-api/courses/${id}`);
+  url.searchParams.append('code', googleGetGapiToken());
+  const res = axios.get(url);
+  return res;
+}
+
+export const googleAddClassroom = async (id, classroom) => {
+  const url = new URL(`${server}/google-classroom-api/courses/${id}`);
+  url.searchParams.append('code', googleGetGapiToken());
+  const res = axios.post(url, classroom);
+  return res;
+}

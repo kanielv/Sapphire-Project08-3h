@@ -9,7 +9,7 @@ import { useGlobalState } from '../../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
 
 // Google Api Imports
-import { googleGetClassrooms } from '../../../Utils/googleRequests';
+import { googleGetClassroom, googleGetClassrooms } from '../../../Utils/googleRequests';
 import { googleGetGapiToken } from '../../../Utils/GoogleAuthRequests';
 
 export default function Dashboard() {
@@ -39,6 +39,7 @@ export default function Dashboard() {
           });
           setGoogleClassrooms(googleClassrooms);
         })
+
       }
       else {
         message.error(res.err);
@@ -52,6 +53,24 @@ export default function Dashboard() {
   const handleViewClassroom = (classroomId) => {
     navigate(`/classroom/${classroomId}`);
   };
+
+  const handleGoogleAddClassroom = (classroomId) => {
+    console.log(classroomId)
+    googleGetClassroom(classroomId).then(res => {
+      if(res.data) {
+        // navigate to add class room form
+      
+        navigate('/add-google-classroom-form', { state: res.data.course });
+      }
+      else {
+        message.error(res.err);
+        navigate('/teacherlogin');
+      }
+
+    }).catch(err => {
+      console.log(err);
+    })
+  }
 
   // If Google authenticated user
   if (classrooms.length == 0 && googleGetGapiToken() != null) {
@@ -67,7 +86,7 @@ export default function Dashboard() {
                 <div id='card-left-content-container'>
                   <h1 id='card-title'>{classroom.name}</h1>
                   <div id='card-button-container' className='flex flex-row'>
-                    <button>
+                    <button onClick={() => handleGoogleAddClassroom(classroom.id)}>
                       Add Class
                     </button>
                   </div>
