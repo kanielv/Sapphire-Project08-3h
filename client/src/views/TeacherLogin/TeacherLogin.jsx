@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
-import { GoogleUserGetProfile, setGoogleUserSession } from '../../Utils/GoogleAuthRequests';
+import { googleUserGetProfile, googleUserSetSession } from '../../Utils/GoogleAuthRequests';
 import './TeacherLogin.less';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -48,12 +48,25 @@ export default function TeacherLogin() {
   };
 
   const handleCredential = async (res) => {
-    const credential = res.credential;
-    const dataRes = await GoogleUserGetProfile(credential); 
-    setGoogleUserSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
-    navigate('/dashboard');  
+    const dataRes = await googleUserGetProfile(res);
+    console.log(dataRes.data.gapi_token)
+    googleUserSetSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
+    navigate('/dashboard');
   }
 
+  const scopes ='https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.courses.readonly';
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: codeResponse => handleCredential(codeResponse.code),
+    flow: 'auth-code',
+    redirect_uri: 'postmessage',
+    scope: scopes
+  });
+
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    googleLogin();
+  }
   return (
     <div className='container nav-padding'>
       <NavBar />
@@ -82,18 +95,7 @@ export default function TeacherLogin() {
             Forgot Password?
           </p>
 
-          <div className='google-sign-in'>
-            <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
-              <GoogleLogin
-                ux_mode='popup'
-                shape='pill'
-                theme='filled_blue'
-                size='large'
-                onSuccess={res => {handleCredential(res)}}
-                onError={() => console.log("Login Failed")}
-              />
-            </GoogleOAuthProvider>
-          </div>
+          <button onClick={(e) => handleGoogleLogin(e)}>Sign in with Google</button>
 
           <input
             type='button'

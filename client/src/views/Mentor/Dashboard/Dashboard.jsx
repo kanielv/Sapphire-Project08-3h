@@ -8,12 +8,20 @@ import NavBar from '../../../components/NavBar/NavBar';
 import { useGlobalState } from '../../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
 
+// Google Api Imports
+import { googleGetClassrooms } from '../../../Utils/googleRequests';
+import { googleGetGapiToken } from '../../../Utils/GoogleAuthRequests';
+
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [value] = useGlobalState('currUser');
   const navigate = useNavigate();
 
   useEffect(() => {
+    googleGetClassrooms(googleGetGapiToken()).then(res => {
+      console.log(res.data.courses);
+    })
+
     let classroomIds = [];
     getMentor().then((res) => {
       if (res.data) {
@@ -47,7 +55,7 @@ export default function Dashboard() {
                 <h1 id='card-title'>{classroom.name}</h1>
                 <div id='card-button-container' className='flex flex-row'>
                   <button onClick={() => handleViewClassroom(classroom.id)}>
-                    View
+                    Viewgoogle-classroom-api
                   </button>
                 </div>
               </div>
