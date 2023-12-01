@@ -25,7 +25,6 @@ module.exports = {
 
   getCourseList: async (ctx) => {
     const code = ctx.request.query.code
-    // console.log(`Code: ${code}`);
 
     const googleClassroomClient = await strapi
       .plugins['google-classroom-api']
@@ -37,13 +36,12 @@ module.exports = {
     .services.classroom
     .getCourses(googleClassroomClient);
 
+    console.log(courses)
+
     ctx.send({
       message: 'ok',
-      courses
+      courses: courses.data.courses
     });
-  },
-
-  changeStudentGrade: async (ctx) => {
-
   }
+
 };

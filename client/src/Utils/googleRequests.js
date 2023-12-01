@@ -1,3 +1,4 @@
+import { googleGetGapiToken } from './GoogleAuthRequests';
 import { server } from './hosts';
 import { setUserState, getCurrUser } from './userState';
 
@@ -6,13 +7,6 @@ import axios from 'axios';
 const makeGoogleRequest = async ({ method, path, data, auth = false, error }) => {
     let res = null;
     let err = null;
-    const config = auth
-      ? {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      : null;
   
     try {
       switch (method) {
@@ -39,10 +33,9 @@ const makeGoogleRequest = async ({ method, path, data, auth = false, error }) =>
     return { data: res, err: err };
   };
 
-
-export const googleGetClassrooms = async (code) => {
+export const googleGetClassrooms = async () => {
   const url = new URL(`${server}/google-classroom-api/me`);
-  url.searchParams.append('code', code);
+  url.searchParams.append('code', googleGetGapiToken());
   const res = axios.get(url);
   return res;
 }
