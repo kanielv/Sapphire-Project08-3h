@@ -2,8 +2,16 @@
   "routes": [
     {
       "method": "GET",
-      "path": "/me",
-      "handler": "classroom.getCourseList",
+      "path": "/courses",
+      "handler": "classroom.list",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/courses/:id",
+      "handler": "classroom.get",
       "config": {
         "policies": []
       }

@@ -23,7 +23,7 @@ module.exports = {
     });
   },
 
-  getCourseList: async (ctx) => {
+  list: async (ctx) => {
     const code = ctx.request.query.code
 
     const googleClassroomClient = await strapi
@@ -42,6 +42,24 @@ module.exports = {
       message: 'ok',
       courses: courses.data.courses
     });
+  },
+
+  get: async (ctx) => {
+    const id = ctx.request.query.id;
+
+    const googleClassroomClient = await strapi
+    .plugins['google-classroom-api']
+    .services.classroom
+    .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.get({
+      id
+    })
+    console.log(classroom);
+    ctx.send({
+      message: 'ok',
+      course
+    })
   }
 
 };
