@@ -29,8 +29,24 @@ module.exports = {
 
     async getCourses(googleClassroom) {
         return await googleClassroom.courses.list({})
-    }
+    },
 
+    async updateGrade(googleClassroom, courseId, courseWorkId, studentId, updatedSubmissionData) {
+        //return await googleClassroom.courses.courseWork.studentSubmissions.patch();
 
+        try {
+          const response = await client.courses.courseWork.studentSubmissions.patch({
+            courseId,
+            courseWorkId,
+            id: studentId,
+            updateMask: 'draftGrade,assignedGrade', // Add other fields as needed
+            resource: updatedSubmissionData,
+          });
+
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
     
 };
