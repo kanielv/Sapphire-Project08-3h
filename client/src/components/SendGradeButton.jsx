@@ -10,10 +10,12 @@ const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
         try {
             // Assuming you have the `code` needed for authorization
             const code = 'your-auth-code'; // Replace with the actual auth code
+            const url = new URL(`${server}/google-classroom-api/courses/${courseId}/${courseWorkId}/${studentId}`);
+            url.searchParams.append('code', code)
 
             // Make a request to your Strapi API to update the submission
             const response = await axios.patch(
-                `http://localhost:3000/google-classroom/${courseId}/${courseWorkId}/${studentId}?code=${code}`,
+                `http://localhost:3000/google-classroom/${courseId}/${courseWorkId}/${studentId}?code=${googleGetGapiToken()}`,
                 {
                     draftGrade: 90,
                     assignedGrade: 95,
@@ -26,6 +28,7 @@ const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
         } catch (error) {
             console.error('Error updating submission:', error);
         }
+          
     };
 
     return (

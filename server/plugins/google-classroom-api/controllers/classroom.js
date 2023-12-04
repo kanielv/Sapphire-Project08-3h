@@ -73,7 +73,7 @@ module.exports = {
 
   get: async (ctx) => {
     const code = ctx.request.query.code;
-    const id = ctx.params.id;
+    const id = ctx.params.courseId;
 
 
 
