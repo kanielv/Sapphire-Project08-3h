@@ -25,6 +25,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork",
+      "handler": "classroom.courseWork",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PATCH",
       "path": "/courses/:courseId/:courseWorkId/studentSubmissions/:studentId",
       "handler": "classroom.updateStudentGrade",

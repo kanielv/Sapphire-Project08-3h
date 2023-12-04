@@ -89,6 +89,27 @@ module.exports = {
       course: course.data
     })
   },
+
+  courseWork: async (ctx) => {
+    const code = ctx.request.query.code;
+    const id = ctx.params.courseId;
+    console.log(id)
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.courseWork.list({
+      courseId: id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  },
+
   create: async (ctx) => {
     const { name, school, grade, enrollmentCode, mentorObj } = ctx.request.body;
     ctx.request.body.code = enrollmentCode;

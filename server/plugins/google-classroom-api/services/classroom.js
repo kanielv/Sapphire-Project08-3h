@@ -10,43 +10,47 @@ const axios = require('axios')
  */
 
 module.exports = {
-    async getGoogleClassroomClient(code) {
-        const oAuth2Client = new google.auth.OAuth2(
-            process.env.CLIENT_ID,
-            process.env.CLIENT_SECRET,
-            process.env.REDIRECT_URL
-        );
-        google.options({ auth: oAuth2Client });
+  async getGoogleClassroomClient(code) {
+    const oAuth2Client = new google.auth.OAuth2(
+      process.env.CLIENT_ID,
+      process.env.CLIENT_SECRET,
+      process.env.REDIRECT_URL
+    );
+    google.options({ auth: oAuth2Client });
 
-        oAuth2Client.setCredentials({
-            access_token: code
-         });
-        
-        const googleClassroom = google.classroom({ version: 'v1', auth: oAuth2Client });
+    oAuth2Client.setCredentials({
+      access_token: code
+    });
 
-        return await googleClassroom;
-    },
+    const googleClassroom = google.classroom({ version: 'v1', auth: oAuth2Client });
 
-    async getCourses(googleClassroom) {
-        return await googleClassroom.courses.list({})
-    },
+    return await googleClassroom;
+  },
 
-    async updateGrade(googleClassroom, courseId, courseWorkId, studentId, updatedSubmissionData) {
-        //return await googleClassroom.courses.courseWork.studentSubmissions.patch();
+  async getCourses(googleClassroom) {
+    return await googleClassroom.courses.list({})
+  },
 
-        try {
-          const response = await client.courses.courseWork.studentSubmissions.patch({
-            courseId,
-            courseWorkId,
-            id: studentId,
-            updateMask: 'draftGrade,assignedGrade', // Add other fields as needed
-            resource: updatedSubmissionData,
-          });
+  async getCourseWork(googleClassroom) {
+    return await googleClassroom.courses.courseWork.list({})
+  },
 
-          return response.data;
-        } catch (error) {
-          throw error;
-        }
-      },
-    
+  async updateGrade(googleClassroom, courseId, courseWorkId, studentId, updatedSubmissionData) {
+    //return await googleClassroom.courses.courseWork.studentSubmissions.patch();
+
+    try {
+      const response = await googleClassroom.courses.courseWork.studentSubmissions.patch({
+        courseId,
+        courseWorkId,
+        id: studentId,
+        updateMask: 'draftGrade,assignedGrade', // Add other fields as needed
+        resource: updatedSubmissionData,
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
