@@ -1,3 +1,4 @@
+import { getToken } from './AuthRequests';
 import { googleGetGapiToken } from './GoogleAuthRequests';
 import { server } from './hosts';
 import { setUserState, getCurrUser } from './userState';
