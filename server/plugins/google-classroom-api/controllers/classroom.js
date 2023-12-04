@@ -75,7 +75,10 @@ module.exports = {
     const code = ctx.request.query.code;
     const id = ctx.params.courseId;
 
-
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
 
     const course = await googleClassroomClient.courses.get({
       id
@@ -86,7 +89,6 @@ module.exports = {
       course: course.data
     })
   },
-
   create: async (ctx) => {
     const { name, school, grade, enrollmentCode, mentorObj } = ctx.request.body;
     ctx.request.body.code = enrollmentCode;
