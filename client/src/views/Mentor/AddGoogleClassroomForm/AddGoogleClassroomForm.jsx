@@ -15,10 +15,31 @@ export default function AddGoogleClassroomForm() {
   const [value] = useGlobalState('currUser');
   const location = useLocation();
   const { id, name, enrollmentCode } = location.state;
+  const navigate = useNavigate();
+
+  // For debugging change these fields
+  const grade = 4;
+  const school = 1;
+  const firstName = 'Kaniel'
+  const lastName = 'Vicencio'
 
   const handleAddClassroom = () => {
-    googleAddClassroom(id, {id, name, enrollmentCode}).then(res => {
-      console.log(res)
+    const classroomObj = {
+      name,
+      school,
+      grade,
+      enrollmentCode,
+      mentorObj: {
+        firstName,
+        lastName,
+        school,
+        user: 18
+      }
+    }
+
+    googleAddClassroom(id, classroomObj).then(res => {
+      console.log(res);
+      // navigate('/dashboard')
     }).catch(err => {
       console.log(err)
     })

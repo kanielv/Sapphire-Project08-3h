@@ -119,7 +119,7 @@ export default function Dashboard() {
                   <h1 id='card-title'>{classroom.name}</h1>
                   <div id='card-button-container' className='flex flex-row'>
                     <button onClick={() => handleViewClassroom(classroom.id)}>
-                      Viewgoogle-classroom-api
+                      View Classroom
                     </button>
                   </div>
                 </div>
@@ -133,6 +133,7 @@ export default function Dashboard() {
                 </div>
               </div>
             ))}
+        
           </div>
         </div>
       </div>
