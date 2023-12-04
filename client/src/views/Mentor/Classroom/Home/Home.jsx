@@ -22,7 +22,11 @@ export default function Home({ classroomId, viewing }) {
 
   const SCIENCE = 1;
   const MAKING = 2;
-  const COMPUTATION = 3;
+    const COMPUTATION = 3;
+
+    const courseId = 'NjM3MTA3NjEzNDky';
+    const courseWorkId = 'NjM3MTEwOTc4NjI5';
+    const studentId = 'NjM3MTExMDc5MDkw';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -152,7 +156,15 @@ export default function Home({ classroomId, viewing }) {
                           >
                             Demo Template
                           </button>
-                        )}
+                              )}
+
+                              {/* Use the button component with the necessary IDs */}
+                              <UpdateSubmissionButton
+                                  courseId={courseId}
+                                  courseWorkId={courseWorkId}
+                                  studentId={studentId}
+                              />
+
                         <MentorActivityDetailModal
                           learningStandard={activeLessonModule}
                           selectActivity={activity}

@@ -23,6 +23,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "PATCH",
+      "path": "/google-classroom/:courseId/:courseWorkId/:studentId",
+      "handler": "classroom.updateStudentGrade",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
