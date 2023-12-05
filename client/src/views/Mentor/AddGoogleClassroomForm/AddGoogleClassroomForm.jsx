@@ -51,6 +51,7 @@ export default function AddGoogleClassroomForm() {
     googleAddClassroom(id, classroomObj).then(res => {
       console.log(res);
       navigate('/dashboard')
+      message.success('Classroom added');
     }).catch(err => {
       console.log(err)
     })
