@@ -53,7 +53,7 @@ export default function TeacherLogin() {
     navigate('/dashboard');
   }
 
-  const scopes ='https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.courses.readonly';
+  const scopes ='https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.coursework.students https://www.googleapis.com/auth/classroom.coursework.me';
 
   const googleLogin = useGoogleLogin({
     onSuccess: codeResponse => handleCredential(codeResponse.code),

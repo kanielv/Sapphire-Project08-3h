@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { server } from '../Utils/hosts';
+import { googleGetGapiToken } from '../Utils/GoogleAuthRequests';
+import { googleGetClassroom, googleGetClassrooms, googleGetCourseWork} from '../Utils/googleRequests';
 
 const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
     const [response, setResponse] = useState(null);
@@ -9,23 +12,26 @@ const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
     const handleUpdateSubmission = async () => {
         try {
             // Assuming you have the `code` needed for authorization
-            const code = 'your-auth-code'; // Replace with the actual auth code
+            // const url = new URL(`${server}/google-classroom-api/courses/${courseId}/${courseWorkId}/${studentId}`);
+            // url.searchParams.append('code', googleGetGapiToken());
 
-            // Make a request to your Strapi API to update the submission
-            const response = await axios.patch(
-                `http://localhost:3000/google-classroom/${courseId}/${courseWorkId}/${studentId}?code=${code}`,
-                {
-                    draftGrade: 90,
-                    assignedGrade: 95,
-                    // ... other fields
-                }
-            );
+            // // Make a request to your Strapi API to update the submission
+            // const response = await axios.patch(url,
+            //     {
+            //         draftGrade: 90,
+            //         assignedGrade: 95,
+            //         // ... other fields
+            //     }
+            // );
+
+            const classrooms = await googleGetCourseWork(41824753675, 591001602762);
+            console.log(classrooms)
 
             // Handle the response
-            setResponse(response.data);
         } catch (error) {
             console.error('Error updating submission:', error);
         }
+          
     };
 
     return (

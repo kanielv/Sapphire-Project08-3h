@@ -11,6 +11,7 @@ import MentorActivityDetailModal from './MentorActivityDetailModal';
 import LessonModuleModal from './LessonModuleSelect/LessonModuleModal';
 import { message, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import UpdateSubmissionButton from '../../../../components/UpdateSubmissionButton'
 
 export default function Home({ classroomId, viewing }) {
   const [classroom, setClassroom] = useState({});

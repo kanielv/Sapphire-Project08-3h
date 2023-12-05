@@ -10,7 +10,7 @@
     },
     {
       "method": "GET",
-      "path": "/courses/:id",
+      "path": "/courses/:courseId",
       "handler": "classroom.get",
       "config": {
         "policies": []
@@ -18,15 +18,23 @@
     },
     {
       "method": "POST",
-      "path": "/courses/:id",
+      "path": "/courses/:courseId",
       "handler": "classroom.create",
       "config": {
         "policies": []
       }
     },
     {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork",
+      "handler": "classroom.courseWork",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PATCH",
-      "path": "/google-classroom/:courseId/:courseWorkId/:studentId",
+      "path": "/courses/:courseId/:courseWorkId/studentSubmissions/:studentId",
       "handler": "classroom.updateStudentGrade",
       "config": {
         "policies": []

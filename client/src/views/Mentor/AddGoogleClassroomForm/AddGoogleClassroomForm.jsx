@@ -24,6 +24,7 @@ export default function AddGoogleClassroomForm() {
   const lastName = 'Vicencio'
 
   const handleAddClassroom = () => {
+    console.log(sessionStorage.getItem('user'))
     const classroomObj = {
       name,
       school,
@@ -39,7 +40,7 @@ export default function AddGoogleClassroomForm() {
 
     googleAddClassroom(id, classroomObj).then(res => {
       console.log(res);
-      navigate('/dashboard')
+      // navigate('/dashboard')
     }).catch(err => {
       console.log(err)
     })
