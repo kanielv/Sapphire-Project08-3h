@@ -79,6 +79,14 @@ module.exports = {
       }
       classroom = await strapi.services.classroom.create(ctx.request.body)
 
+      const googleClassroom = {
+        name: name,
+        strapi_id: classroom.id,
+        google_classroom_id: ctx.params.id
+      }
+
+      let googleclassroom = await strapi.services['google-classroom'].create(googleClassroom)
+
       ctx.request.body.classrooms = [classroom]
 
 
