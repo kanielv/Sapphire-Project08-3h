@@ -24,11 +24,10 @@ const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
             //     }
             // );
 
-            const classrooms = await googleGetCourseWork(41824753675);
+            const classrooms = await googleGetCourseWork(41824753675, 591001602762);
             console.log(classrooms)
 
             // Handle the response
-            setResponse(response.data);
         } catch (error) {
             console.error('Error updating submission:', error);
         }
