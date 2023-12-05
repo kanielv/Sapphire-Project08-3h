@@ -538,6 +538,15 @@
           "google_classroom_link": {
             "type": "string"
           },
+          "strapi_id": {
+            "type": "integer"
+          },
+          "google_classroom_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -547,6 +556,15 @@
       "NewGoogle-classroom": {
         "properties": {
           "google_classroom_link": {
+            "type": "string"
+          },
+          "strapi_id": {
+            "type": "integer"
+          },
+          "google_classroom_id": {
+            "type": "integer"
+          },
+          "name": {
             "type": "string"
           },
           "published_at": {
