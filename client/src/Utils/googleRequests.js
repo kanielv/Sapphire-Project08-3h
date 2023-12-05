@@ -68,3 +68,11 @@ export const googleGetCourseWork = async (courseId, courseWorkId) => {
   const res = axios.get(url);
   return res;
 }
+
+export const googleGetStudentSubmissions = async (courseId, courseWorkId) => {
+    const url = new URL(`${server}/google-classroom-api/courses/${courseId}/courseWork/${courseWorkId}/studentSubmissions`);
+    url.searchParams.append('code', googleGetGapiToken());
+    //console.log(url);
+    const res = await axios.get(url);
+    return res;
+}

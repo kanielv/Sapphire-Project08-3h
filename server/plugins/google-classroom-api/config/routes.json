@@ -33,6 +33,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork/:courseWorkId/studentSubmissions",
+      "handler": "classroom.getStudentId",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PATCH",
       "path": "/courses/:courseId/:courseWorkId/studentSubmissions/:studentId",
       "handler": "classroom.updateStudentGrade",
