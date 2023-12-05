@@ -25,6 +25,14 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/assignmentupload/:id",
+      "handler": "classroom.upload",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "GET",
       "path": "/courses/:courseId/courseWork",
       "handler": "classroom.courseWorkList",
