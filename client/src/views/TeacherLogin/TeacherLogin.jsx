@@ -49,6 +49,7 @@ export default function TeacherLogin() {
 
   const handleCredential = async (res) => {
     const dataRes = await googleUserGetProfile(res);
+    console.log(dataRes.data)
     googleUserSetSession(dataRes.data.token, dataRes.data.gapi_token, JSON.stringify(dataRes.data.user));
     navigate('/dashboard');
   }
