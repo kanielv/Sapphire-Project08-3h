@@ -35,6 +35,10 @@ module.exports = {
     return await googleClassroom.courses.courseWork.list({})
   },
 
+  async getCourseWork(googleClassroom) {
+    return await googleClassroom.courses.courseWork.list({})
+  },
+
   async updateGrade(googleClassroom, courseId, courseWorkId, studentId, updatedSubmissionData) {
     //return await googleClassroom.courses.courseWork.studentSubmissions.patch();
 

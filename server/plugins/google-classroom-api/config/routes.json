@@ -27,6 +27,14 @@
     {
       "method": "GET",
       "path": "/courses/:courseId/courseWork",
+      "handler": "classroom.courseWorkList",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork/:courseWorkId",
       "handler": "classroom.courseWork",
       "config": {
         "policies": []
