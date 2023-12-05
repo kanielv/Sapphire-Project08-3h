@@ -52,6 +52,9 @@ module.exports = {
     const { courseId, courseWorkId, studentId } = ctx.params;
     const { draftGrade, assignedGrade } = ctx.request.body;
 
+   
+    
+
     const updatedSubmissionData = {
       draftGrade,
       assignedGrade,
@@ -108,6 +111,36 @@ module.exports = {
       message: 'ok',
       course: course.data
     })
+  },
+
+  getStudentId: async (ctx) => {
+    try {
+      const code = ctx.request.query.code;
+      const courseId = ctx.params.courseId;
+      const courseWorkId = ctx.params.courseWorkId;
+      console.log(courseId);
+      console.log(courseWorkId)
+
+      const googleClassroomClient = await strapi
+        .plugins['google-classroom-api']
+        .services.classroom
+        .getGoogleClassroomClient(code);
+
+      const students = await googleClassroomClient.courses.courseWork.studentSubmissions.list({
+        courseId: courseId,
+        courseWorkId: courseWorkId,
+      })
+
+      console.log(students);
+      ctx.send({
+        message: 'ok',
+        course: students.data
+      })
+    }
+    catch (error) {
+        console.error('Error getting student submissions:', error);
+        ctx.throw(500, 'Error getting student submissions', { error });
+      }
   },
 
   create: async (ctx) => {

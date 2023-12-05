@@ -25,7 +25,7 @@ export default function Home({ classroomId, viewing }) {
   const MAKING = 2;
     const COMPUTATION = 3;
 
-    const courseId = 'NjM3MTA3NjEzNDky';
+    const courseId = '637107613492';
     const courseWorkId = 'NjM3MTEwOTc4NjI5';
     const studentId = 'NjM3MTExMDc5MDkw';
 

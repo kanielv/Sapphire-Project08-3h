@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { server } from '../Utils/hosts';
 import { googleGetGapiToken } from '../Utils/GoogleAuthRequests';
-import { googleGetClassroom, googleGetClassrooms, googleGetCourseWork} from '../Utils/googleRequests';
+import { googleGetStudentSubmissions, googleGetCourseWork, googleGetCourseWorkList} from '../Utils/googleRequests';
 
 const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
     const [response, setResponse] = useState(null);
@@ -24,7 +24,8 @@ const UpdateSubmissionButton = ({ courseId, courseWorkId, studentId }) => {
             //     }
             // );
 
-            const classrooms = await googleGetCourseWork(41824753675, 591001602762);
+            //const classrooms = await googleGetCourseWorkList('637107613492');
+            const classrooms = await googleGetStudentSubmissions('637107613492', '637110978629');
             console.log(classrooms)
 
             // Handle the response
