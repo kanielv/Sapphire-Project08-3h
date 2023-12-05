@@ -162,9 +162,8 @@ export default function Home({ classroomId, viewing }) {
 
                               {/* Use the button component with the necessary IDs */}
                               <UpdateSubmissionButton
-                                  courseId={courseId}
-                                  courseWorkId={courseWorkId}
-                                  studentId={studentId}
+                                classroomid={classroomId}
+                                activity={activity}
                               />
 
                         <MentorActivityDetailModal
