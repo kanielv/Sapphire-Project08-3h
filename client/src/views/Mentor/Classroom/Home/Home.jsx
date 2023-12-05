@@ -11,6 +11,7 @@ import MentorActivityDetailModal from './MentorActivityDetailModal';
 import LessonModuleModal from './LessonModuleSelect/LessonModuleModal';
 import { message, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import AssignmentUpload from '../../GoogleClassroomAssignmentUpload/AssignmentUpload';
 
 export default function Home({ classroomId, viewing }) {
   const [classroom, setClassroom] = useState({});
@@ -234,6 +235,12 @@ export default function Home({ classroomId, viewing }) {
                             </a>
                           </p>
                         ) : null}
+                      </div>
+                      <div>
+                          <AssignmentUpload 
+                            classroomid={classroomId}
+                            activity={activity}
+                          />
                       </div>
                     </div>
                   ))}
