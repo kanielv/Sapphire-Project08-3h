@@ -29,6 +29,10 @@ module.exports = {
 
     async getCourses(googleClassroom) {
         return await googleClassroom.courses.list({})
+    },
+
+    async getCurrentCourse() {
+
     }
 
 

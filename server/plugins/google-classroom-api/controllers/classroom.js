@@ -62,7 +62,7 @@ module.exports = {
   },
 
   create: async (ctx) => {
-    const { name, school, grade, enrollmentCode, mentorObj } = ctx.request.body;
+    const { name, id, enrollmentCode, mentorObj } = ctx.request.body;
     ctx.request.body.code = enrollmentCode;
 
     // Set mentor body
@@ -72,11 +72,16 @@ module.exports = {
     console.log(ctx.request.body)
 
     try {
+      // Store id in database
+
       // Check if classroom exists
       let classroom = await strapi.query('classroom').findOne({name: name})
       const classroomExists = classroom !== null;
       if(classroomExists) {
+        ctx.badRequest("Classroom exists");
       }
+
+      // Add students to roster
       classroom = await strapi.services.classroom.create(ctx.request.body)
 
       ctx.request.body.classrooms = [classroom]
