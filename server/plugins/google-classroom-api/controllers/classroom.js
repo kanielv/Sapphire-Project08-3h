@@ -62,7 +62,7 @@ module.exports = {
   },
 
   create: async (ctx) => {
-    const { name, school, grade, enrollmentCode, mentorObj } = ctx.request.body;
+    const { name, id, enrollmentCode, mentorObj } = ctx.request.body;
     ctx.request.body.code = enrollmentCode;
 
     // Set mentor body
@@ -72,22 +72,26 @@ module.exports = {
     console.log(ctx.request.body)
 
     try {
+      // Store id in database
+
       // Check if classroom exists
       let classroom = await strapi.query('classroom').findOne({name: name})
       const classroomExists = classroom !== null;
       if(classroomExists) {
+        ctx.badRequest("Classroom exists");
       }
+
+      // Add students to roster
       classroom = await strapi.services.classroom.create(ctx.request.body)
+      ctx.request.body.classrooms = [classroom]
 
-      const googleClassroom = {
+      const googleClassroomObj = {
         name: name,
-        strapi_id: classroom.id,
-        google_classroom_id: ctx.params.id
+        classroom: classroom.id,
+        google_classroom_id: id
       }
 
-      let googleclassroom = await strapi.services['google-classroom'].create(googleClassroom)
-
-      ctx.request.body.classrooms = [classroom]
+      const googleClassroom = await strapi.services['google-classroom'].create(googleClassroomObj)
 
 
       // Assign user as mentor
@@ -118,13 +122,11 @@ module.exports = {
 
   },
 
-  upload: async(ctx) =>{
-    const strapi_id = ctx.params.id;
-    const activity = ctx.request.body;
+  // Course Work Routes
+  courseWorkList: async (ctx) => {
     const code = ctx.request.query.code;
-    
-    let googleclassroom = await strapi.query('google-classroom').findOne({ strapi_id: strapi_id });
-    const google_classroom_id = googleclassroom.google_classroom_id
+    const id = ctx.params.courseId;
+    console.log(id)
 
     const googleClassroomClient = await strapi
       .plugins['google-classroom-api']
@@ -132,6 +134,47 @@ module.exports = {
       .getGoogleClassroomClient(code);
 
     let response = await googleClassroomClient.courses.topics.list({courseId: google_classroom_id});
+
+    const course = await googleClassroomClient.courses.courseWork.list({
+      courseId: id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  },
+
+  courseWork: async(ctx) => {
+    const code = ctx.request.query.code;
+
+    const { courseId, id } = ctx.params;
+
+    console.log(courseWorkId)
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.courseWork.get({
+      courseId: courseId,
+      id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  } 
+    
+  upload: async(ctx) =>{
+    const strapi_id = ctx.params.id;
+    const activity = ctx.request.body;
+    const code = ctx.request.query.code;
+    
+    let googleclassroom = await strapi.query('google-classroom').findOne({ strapi_id: strapi_id });
+    const google_classroom_id = googleclassroom.google_classroom_id
 
     var topics_id;
     let topics = response.data.topic.filter((topic) => topic.name === activity.lesson_module.name);

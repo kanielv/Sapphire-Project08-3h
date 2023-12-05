@@ -31,6 +31,22 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork",
+      "handler": "classroom.courseWorkList",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork/:id",
+      "handler": "classroom.courseWork",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
