@@ -38,12 +38,12 @@ export default function AddGoogleClassroomForm() {
       }
     }
 
-    // googleAddClassroom(id, classroomObj).then(res => {
-    //   console.log(res);
-    //   navigate('/dashboard')
-    // }).catch(err => {
-    //   console.log(err)
-    // })
+    googleAddClassroom(id, classroomObj).then(res => {
+      console.log(res);
+      navigate('/dashboard')
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
   return (

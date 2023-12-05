@@ -83,16 +83,15 @@ module.exports = {
 
       // Add students to roster
       classroom = await strapi.services.classroom.create(ctx.request.body)
+      ctx.request.body.classrooms = [classroom]
 
-      const googleClassroom = {
+      const googleClassroomObj = {
         name: name,
-        strapi_id: classroom.id,
-        google_classroom_id: ctx.params.id
+        classroom: classroom.id,
+        google_classroom_id: id
       }
 
-      let googleclassroom = await strapi.services['google-classroom'].create(googleClassroom)
-
-      ctx.request.body.classrooms = [classroom]
+      const googleClassroom = await strapi.services['google-classroom'].create(googleClassroomObj)
 
 
       // Assign user as mentor

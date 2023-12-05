@@ -11,17 +11,15 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "google_classroom_link": {
-      "type": "string"
-    },
-    "strapi_id": {
-      "type": "biginteger"
-    },
     "google_classroom_id": {
       "type": "biginteger"
     },
     "name": {
       "type": "string"
+    },
+    "classroom": {
+      "model": "classroom",
+      "via": "google_classroom"
     }
   }
 }
