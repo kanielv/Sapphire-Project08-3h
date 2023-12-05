@@ -42,9 +42,41 @@ module.exports = {
     });
   },
 
+  updateStudentGrade: async (ctx) => {
+    const code = ctx.request.query.code
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const { courseId, courseWorkId, studentId } = ctx.params;
+    const { draftGrade, assignedGrade } = ctx.request.body;
+
+   
+    
+
+    const updatedSubmissionData = {
+      draftGrade,
+      assignedGrade,
+      // Add other fields as needed
+    };
+
+    try {
+      
+      const updatedSubmission = await strapi
+        .plugins['google-classroom-api']
+        .services.classroom
+        .updateGrade(googleClassroomClient, courseId, courseWorkId, studentId, updatedSubmissionData);
+
+      ctx.send(updatedSubmission);
+    } catch (error) {
+      ctx.throw(500, 'Error updating submission', { error });
+    }
+  },
+
   get: async (ctx) => {
     const code = ctx.request.query.code;
-    const id = ctx.params.id;
+    const id = ctx.params.courseId;
 
     const googleClassroomClient = await strapi
       .plugins['google-classroom-api']
@@ -59,6 +91,56 @@ module.exports = {
       message: 'ok',
       course: course.data
     })
+  },
+
+  courseWork: async (ctx) => {
+    const code = ctx.request.query.code;
+    const id = ctx.params.courseId;
+    console.log(id)
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.courseWork.list({
+      courseId: id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  },
+
+  getStudentId: async (ctx) => {
+    try {
+      const code = ctx.request.query.code;
+      const courseId = ctx.params.courseId;
+      const courseWorkId = ctx.params.courseWorkId;
+      console.log(courseId);
+      console.log(courseWorkId)
+
+      const googleClassroomClient = await strapi
+        .plugins['google-classroom-api']
+        .services.classroom
+        .getGoogleClassroomClient(code);
+
+      const students = await googleClassroomClient.courses.courseWork.studentSubmissions.list({
+        courseId: courseId,
+        courseWorkId: courseWorkId,
+      })
+
+      console.log(students);
+      ctx.send({
+        message: 'ok',
+        course: students.data
+      })
+    }
+    catch (error) {
+        console.error('Error getting student submissions:', error);
+        ctx.throw(500, 'Error getting student submissions', { error });
+      }
   },
 
   create: async (ctx) => {

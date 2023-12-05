@@ -10,7 +10,7 @@
     },
     {
       "method": "GET",
-      "path": "/courses/:id",
+      "path": "/courses/:courseId",
       "handler": "classroom.get",
       "config": {
         "policies": []
@@ -18,13 +18,19 @@
     },
     {
       "method": "POST",
-      "path": "/courses/:id",
+      "path": "/courses/:courseId",
       "handler": "classroom.create",
       "config": {
         "policies": []
       }
     },
     {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork",
+      "handler": "classroom.courseWork",
+      "config": {
+        "policies": []
+      }
       "method": "POST",
       "path": "/assignmentupload/:id",
       "handler": "classroom.upload",
@@ -34,8 +40,16 @@
     },
     {
       "method": "GET",
-      "path": "/courses/:courseId/courseWork",
-      "handler": "classroom.courseWorkList",
+      "path": "/courses/:courseId/courseWork/:courseWorkId/studentSubmissions",
+      "handler": "classroom.getStudentId",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/courses/:courseId/:courseWorkId/studentSubmissions/:studentId",
+      "handler": "classroom.updateStudentGrade",
       "config": {
         "policies": []
       }
