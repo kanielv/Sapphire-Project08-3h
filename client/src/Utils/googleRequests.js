@@ -76,3 +76,10 @@ export const googleGetStudentSubmissions = async (courseId, courseWorkId) => {
     const res = await axios.get(url);
     return res;
 }
+
+export const sendAssignment = async (id, activity) => {
+  const url = new URL(`${server}/google-classroom-api/assignmentupload/${id}`);
+  url.searchParams.append('code', googleGetGapiToken());
+  const res = axios.post(url, activity);
+  return res;
+}

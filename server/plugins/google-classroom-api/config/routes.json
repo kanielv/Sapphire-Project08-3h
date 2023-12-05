@@ -31,6 +31,12 @@
       "config": {
         "policies": []
       }
+      "method": "POST",
+      "path": "/assignmentupload/:id",
+      "handler": "classroom.upload",
+      "config": {
+        "policies": []
+      }
     },
     {
       "method": "GET",
@@ -44,6 +50,14 @@
       "method": "PATCH",
       "path": "/courses/:courseId/:courseWorkId/studentSubmissions/:studentId",
       "handler": "classroom.updateStudentGrade",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/courses/:courseId/courseWork/:id",
+      "handler": "classroom.courseWork",
       "config": {
         "policies": []
       }
