@@ -108,6 +108,51 @@ module.exports = {
     }
     // return sanitizeEntity(classroom, { model: strapi.models.classroom });
 
-  }
+  },
+
+  // Course Work Routes
+  courseWorkList: async (ctx) => {
+    const code = ctx.request.query.code;
+    const id = ctx.params.courseId;
+    console.log(id)
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.courseWork.list({
+      courseId: id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  },
+
+  courseWork: async(ctx) => {
+    const code = ctx.request.query.code;
+
+    const { courseId, id } = ctx.params;
+
+    console.log(courseWorkId)
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.courseWork.get({
+      courseId: courseId,
+      id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  } 
+
 
 };
