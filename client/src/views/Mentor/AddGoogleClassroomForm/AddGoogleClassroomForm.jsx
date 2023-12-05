@@ -34,6 +34,7 @@ export default function AddGoogleClassroomForm() {
 
     const classroomObj = {
       name,
+      id,
       school: formJson.school,
       grade: formJson.grade,
       enrollmentCode,
