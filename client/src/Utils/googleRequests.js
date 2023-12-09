@@ -55,6 +55,27 @@ export const googleAddClassroom = async (id, classroom) => {
   return res;
 }
 
+export const googleGetCourseWorkList = async (id) => {
+  const url = new URL(`${server}/google-classroom-api/courses/${id}/courseWork`);
+  url.searchParams.append('code', googleGetGapiToken());
+  const res = axios.get(url);
+  return res;
+}
+
+export const googleGetCourseWork = async (courseId, courseWorkId) => {
+  const url = new URL(`${server}/google-classroom-api/courses/${courseId}/courseWork/${courseWorkId}`);
+  url.searchParams.append('code', googleGetGapiToken());
+  const res = axios.get(url);
+  return res;
+}
+
+export const googleGetStudentSubmissions = async (id, activity) => {
+    const url = new URL(`${server}/google-classroom-api/studentList/${id}/learningStandard/${activity.StandardS}/activity/${activity.number}`);
+    url.searchParams.append('code', googleGetGapiToken());
+    const res = await axios.get(url, activity);
+    return res;
+}
+
 export const sendAssignment = async (id, activity) => {
   const url = new URL(`${server}/google-classroom-api/assignmentupload/${id}`);
   url.searchParams.append('code', googleGetGapiToken());

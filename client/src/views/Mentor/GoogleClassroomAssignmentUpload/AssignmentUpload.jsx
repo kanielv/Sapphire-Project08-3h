@@ -9,8 +9,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const AssignmentUpload = ({ classroomid, activity }) => {
-  //const { id, name, enrollmentCode } = location.state;
-
 
   const handleCallback = async () => {
 

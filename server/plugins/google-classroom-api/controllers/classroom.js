@@ -42,9 +42,41 @@ module.exports = {
     });
   },
 
+  updateStudentGrade: async (ctx) => {
+    const code = ctx.request.query.code
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const { courseId, courseWorkId, studentId } = ctx.params;
+    const { draftGrade, assignedGrade } = ctx.request.body;
+
+
+
+
+    const updatedSubmissionData = {
+      draftGrade,
+      assignedGrade,
+      // Add other fields as needed
+    };
+
+    try {
+
+      const updatedSubmission = await strapi
+        .plugins['google-classroom-api']
+        .services.classroom
+        .updateGrade(googleClassroomClient, courseId, courseWorkId, studentId, updatedSubmissionData);
+
+      ctx.send(updatedSubmission);
+    } catch (error) {
+      ctx.throw(500, 'Error updating submission', { error });
+    }
+  },
+
   get: async (ctx) => {
     const code = ctx.request.query.code;
-    const id = ctx.params.id;
+    const id = ctx.params.courseId;
 
     const googleClassroomClient = await strapi
       .plugins['google-classroom-api']
@@ -58,6 +90,76 @@ module.exports = {
     ctx.send({
       message: 'ok',
       course: course.data
+    })
+  },
+
+  courseWork: async (ctx) => {
+    const code = ctx.request.query.code;
+    const id = ctx.params.courseId;
+    console.log(id)
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const course = await googleClassroomClient.courses.courseWork.list({
+      courseId: id
+    })
+    console.log(course)
+    ctx.send({
+      message: 'ok',
+      course: course.data
+    })
+  },
+
+  getStudentId: async (ctx) => {
+
+
+    const strapi_id = ctx.params.id;
+    const code = ctx.request.query.code;
+
+
+    let googleclassroom = await strapi.query('google-classroom').findOne({ classroom: strapi_id });
+    const google_classroom_id = googleclassroom.google_classroom_id
+
+    const googleClassroomClient = await strapi
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
+
+    const courseWork = await googleClassroomClient.courses.courseWork.list({
+      courseId: google_classroom_id,
+    })
+
+    courseWork.data.courseWork.forEach(async (assignment) => {
+
+      const studentSubmissions = await googleClassroomClient.courses.courseWork.studentSubmissions.list({
+        courseId: google_classroom_id,
+        courseWorkId: assignment.id
+      })
+
+      studentSubmissions.data.studentSubmissions.forEach(async (student) => {
+        const studentResponse = await googleClassroomClient.courses.students.get({
+          courseId: google_classroom_id,
+          userId: student.userId
+        })
+        const studentObj = {
+          courseWorkId: assignment.id,
+          submission: student.assignmentSubmission,
+          userId: studentResponse.data.userId, 
+          name: studentResponse.data.profile.name.fullName
+        }
+        
+        console.log(studentObj)
+        
+        
+      })
+
+    })
+
+    ctx.send({
+      message: 'ok',
     })
   },
 
@@ -75,9 +177,9 @@ module.exports = {
       // Store id in database
 
       // Check if classroom exists
-      let classroom = await strapi.query('classroom').findOne({name: name})
+      let classroom = await strapi.query('classroom').findOne({ name: name })
       const classroomExists = classroom !== null;
-      if(classroomExists) {
+      if (classroomExists) {
         ctx.badRequest("Classroom exists");
       }
 
@@ -104,7 +206,7 @@ module.exports = {
         const mentorClassrooms = mentor.classrooms;
         mentorClassrooms.push(classroom);
         console.log(mentorClassrooms)
-        await strapi.query('mentor').update({id: mentor.id}, {classrooms: mentorClassrooms});
+        await strapi.query('mentor').update({ id: mentor.id }, { classrooms: mentorClassrooms });
       }
 
 
@@ -112,13 +214,11 @@ module.exports = {
 
       ctx.send({
         message: 'ok',
-        // body: sanitizeEntity(classroom, { model: strapi.models.classroom })
       })
     }
     catch (err) {
       console.log(err)
     }
-    // return sanitizeEntity(classroom, { model: strapi.models.classroom });
 
   },
 
@@ -143,7 +243,7 @@ module.exports = {
     })
   },
 
-  courseWork: async(ctx) => {
+  courseWork: async (ctx) => {
     const code = ctx.request.query.code;
 
     const { courseId, id } = ctx.params;
@@ -164,47 +264,50 @@ module.exports = {
       message: 'ok',
       course: course.data
     })
-  }, 
-    
-  upload: async(ctx) =>{
+  },
+
+  upload: async (ctx) => {
     const strapi_id = ctx.params.id;
     const activity = ctx.request.body;
     const code = ctx.request.query.code;
-    
-    let googleclassroom = await strapi.query('google-classroom').findOne({classroom: strapi_id });
+
+    let googleclassroom = await strapi.query('google-classroom').findOne({ classroom: strapi_id });
     const google_classroom_id = googleclassroom.google_classroom_id
 
     const googleClassroomClient = await strapi
-    .plugins['google-classroom-api']
-    .services.classroom
-    .getGoogleClassroomClient(code);
+      .plugins['google-classroom-api']
+      .services.classroom
+      .getGoogleClassroomClient(code);
 
-    let response = await googleClassroomClient.courses.topics.list({courseId: google_classroom_id});
+    let response = await googleClassroomClient.courses.topics.list({ courseId: google_classroom_id });
 
     var topics_id;
-    if(!response.data.topic){
+    if (!response.data.topic) {
       const topic = {
         name: activity.lesson_module.name
       }
-      let topics = await googleClassroomClient.courses.topics.create({courseId: google_classroom_id, requestBody: topic});
+      let topics = await googleClassroomClient.courses.topics.create({ courseId: google_classroom_id, requestBody: topic });
       topics_id = topics.data.topicId
-    }else{
+    } else {
       let topics = response.data.topic.filter((topic) => topic.name === activity.lesson_module.name);
       topics_id = topics[0].topicId;
     }
 
     const title = "Activity Level " + activity.number;
-    const assignmentResponse = await googleClassroomClient.courses.courseWork.list({courseId: google_classroom_id});
-    // let assignments = assignmentResponse.data.courseWork.filter((courseWork) => (courseWork.title === title && courseWork.topicId === topics_id));
-    // const assignmentExist = Object.entries(assignments).length > 0;
+    const assignmentResponse = await googleClassroomClient.courses.courseWork.list({ courseId: google_classroom_id });
+    if (assignmentResponse.data.courseWork) {
+      let assignments = assignmentResponse.data.courseWork.filter((courseWork) => (courseWork.title === title && courseWork.topicId === topics_id));
+      const assignmentExist = Object.entries(assignments).length > 0;
+      if (assignmentExist) {
+        ctx.send({
+          message: 'ok',
+          assignmentExists: true
+        })
+        return;
+      }
 
-    if(assignmentResponse.data.courseWork){
-      ctx.send({
-        message: 'ok',
-        assignmentExists: true
-      })
-      return;
     }
+
 
     const assignment = {
       title: title,
@@ -213,7 +316,7 @@ module.exports = {
       state: "PUBLISHED",
       workType: "ASSIGNMENT"
     }
-    const assignmentUpload = await googleClassroomClient.courses.courseWork.create({courseId: google_classroom_id, requestBody: assignment});
+    const assignmentUpload = await googleClassroomClient.courses.courseWork.create({ courseId: google_classroom_id, requestBody: assignment });
     console.log(assignmentUpload)
     ctx.send({
       message: 'ok',

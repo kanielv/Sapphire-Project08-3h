@@ -59,7 +59,6 @@ module.exports = {
         const payload = ticket.getPayload();
         const { name, email} = payload;
 
-        // const { refresh_token } = tokens.refresh_token
 
         // If user does not exist, create new one
         const user = await strapi.query('user', 'users-permissions').findOne({ email: email.toLowerCase() });
